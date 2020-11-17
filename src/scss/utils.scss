@@ -1,0 +1,10 @@
+.selectedCard {
+   outline: #006bff;
+   border: 1px solid #006bff;
+   box-shadow: 0 0 3px #006aff9d;
+}
+.card {
+   &:hover {
+      cursor: pointer;
+   }
+}

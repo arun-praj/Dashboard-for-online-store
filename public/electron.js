@@ -1,7 +1,10 @@
 const path = require("path");
 
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
+
+const Store = require("electron-store");
+const store = new Store();
 
 let installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS; // NEW!
 
@@ -78,3 +81,31 @@ app.on("activate", () => {
       createWindow();
    }
 });
+
+// const setAuthToken = (token) => {
+//    if (token) {
+//       console.log("Token set in header", token);
+//       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+//    } else {
+//       delete axios.defaults.headers.common["Authorization"];
+//    }
+// };
+
+//set token in store
+ipcMain.on("set-token", (event, arg) => {
+   store.set("token", arg);
+   console.log("SET token : ", store.get("token"));
+});
+//send toke to app component
+ipcMain.on("get-token", (event, arg) => {
+   event.reply("token-reply", store.get("token"));
+});
+
+ipcMain.on("remove-token", (event, arg) => {
+   store.delete("token");
+   // event.reply("")
+   console.log("Token removed");
+});
+// Stop error
+// Stop error
+app.allowRendererProcessReuse = true;

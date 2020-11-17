@@ -1,10 +1,19 @@
 import React, { useState } from "react";
+import { usePromiseTracker } from "react-promise-tracker";
 
+//redux
+import { connect } from "react-redux";
+import { login } from "../../../redux/action/auth";
+
+//components
 import Button from "../../ui/Button/Button";
+import Spinner from "../../ui/Spinner/Spinner";
+
+//scss
 import "./Login.scss";
 
-const Login = () => {
-   const [error, setError] = useState("");
+const Login = (props) => {
+   const { promiseInProgress } = usePromiseTracker();
    const [formData, setFormData] = useState({
       email: "",
       password: "",
@@ -18,16 +27,14 @@ const Login = () => {
    };
    const onButtonClick = (e) => {
       e.preventDefault();
+      console.log("clcked");
+
+      props.login(formData);
    };
    return (
       <>
          <div className='login'>
             <div className='login__form'>
-               <div
-                  style={{ display: error.length > 0 ? "block" : "none" }}
-                  className='login__error--box'>
-                  <div className='login__error--text'>Incorrect email or password</div>
-               </div>
                <div className='login__form--heading'>Welcome back ;)</div>
 
                <form action='' className='login__form--box' noValidate>
@@ -58,15 +65,15 @@ const Login = () => {
                         position: "relative",
                      }}
                      onclick={onButtonClick}
-                     //  value={
-                     //     promiseInProgress ? (
-                     //        <div>
-                     //           <Spinner />
-                     //        </div>
-                     //     ) : (
-                     //        "Login"
-                     //     )
-                     //  }
+                     value={
+                        promiseInProgress ? (
+                           <div>
+                              <Spinner />
+                           </div>
+                        ) : (
+                           "Login"
+                        )
+                     }
                      type='blue'
                   />
 
@@ -80,4 +87,4 @@ const Login = () => {
    );
 };
 
-export default Login;
+export default connect(null, { login })(Login);
