@@ -3,7 +3,7 @@ import { useDropzone } from "react-dropzone"
 import moment from "moment"
 import { usePromiseTracker } from "react-promise-tracker"
 import { useDispatch, useSelector } from "react-redux"
-
+import { Link } from "react-router-dom"
 //redux
 import { connect } from "react-redux"
 import { addProduct } from "../../../redux/action/product"
@@ -12,13 +12,15 @@ import Body from "../../HOCs/Body"
 // import Button from "../../ui/Button/Button"
 import Spinner from "../../ui/Spinner/Spinner"
 import { Table, Button, Badge } from "tabler-react"
+import { deleteProduct } from "../../../redux/action/product"
 
 const Products = (props) => {
    const dispatch = useDispatch()
    const { loading, products, count } = useSelector((state) => state.products)
-   const deleteProduct = (e, id) => {
-      e.preventDefault()
+   const deleteSelected = (id) => {
+      // e.preventDefault()
       console.log(id)
+      dispatch(deleteProduct(id))
    }
    return (
       <Body>
@@ -27,6 +29,21 @@ const Products = (props) => {
                padding: "10px",
             }}
          >
+            {" "}
+            <div style={{ padding: "0 0 16px 0" }}>
+               <Link to='/create'>
+                  <Button.List>
+                     <Button
+                        icon='plus'
+                        color='primary'
+                        outline
+                        // onClick={(prev) => setShowMailModal(!prev.showMailModal)}
+                     >
+                        Add product
+                     </Button>
+                  </Button.List>
+               </Link>
+            </div>
             <Table>
                <Table.Header>
                   <Table.ColHeader>ID</Table.ColHeader>
@@ -53,12 +70,14 @@ const Products = (props) => {
                               <Table.Col>{product.updatedAt}</Table.Col>
 
                               <Table.Col>
-                                 <Button color='primary'>Edit</Button>
+                                 <Button color='primary'>
+                                    <Link to={`update/${product._id}`}>
+                                       Edit
+                                    </Link>
+                                 </Button>
                                  <Button
                                     color='danger'
-                                    onClick={(e) =>
-                                       deleteProduct(e, product._id)
-                                    }
+                                    onClick={() => deleteSelected(product._id)}
                                  >
                                     Delete
                                  </Button>

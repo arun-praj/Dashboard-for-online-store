@@ -10,16 +10,21 @@ const Body = (props) => {
       width: "100%",
       height: "100%",
       display: "flex",
-      overflowY: "auto",
+      // overflowY: "scroll ",
       // position: "relative",
    }
 
    return (
       <div style={style}>
          <div
-            style={{ display: "block", height: "100vh", minWidth: "225px" }}
+            style={{
+               display: "block",
+               minHeight: "1000px",
+               minWidth: "225px",
+               overflow: "auto",
+            }}
          ></div>
-         <div style={{ width: "100%" }}>{props.children}</div>
+         <div style={{ width: "100%", overflow: "auto" }}>{props.children}</div>
       </div>
    )
 }

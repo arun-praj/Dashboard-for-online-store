@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import { usePromiseTracker } from "react-promise-tracker";
+import React, { useState } from "react"
+import { usePromiseTracker } from "react-promise-tracker"
 
 //redux
-import { connect } from "react-redux";
-import { login } from "../../../redux/action/auth";
+import { connect } from "react-redux"
+import { login } from "../../../redux/action/auth"
 
 //components
-import Button from "../../ui/Button/Button";
-import Spinner from "../../ui/Spinner/Spinner";
+import Button from "../../ui/Button/Button"
+import Spinner from "../../ui/Spinner/Spinner"
 
 //scss
-import "./Login.scss";
+import "./Login.scss"
 
 const Login = (props) => {
-   const { promiseInProgress } = usePromiseTracker();
+   const { promiseInProgress } = usePromiseTracker()
    const [formData, setFormData] = useState({
       email: "",
       password: "",
-   });
+   })
    const handleChange = (e) => {
-      const { name, value } = e.target;
+      const { name, value } = e.target
       setFormData((prevState) => ({
          ...prevState,
          [name]: value,
-      }));
-   };
+      }))
+   }
    const onButtonClick = (e) => {
-      e.preventDefault();
-      console.log("clcked");
-
-      props.login(formData);
-   };
+      e.preventDefault()
+      // console.log("clcked");
+      console.log(formData.email)
+      props.login(formData)
+   }
    return (
       <>
          <div className='login'>
@@ -78,13 +78,14 @@ const Login = (props) => {
                   />
 
                   <label className='login__form--box--warning'>
-                     Note: Must have an admin account in <a href='#'>dhaushop.herokuapp.com</a>
+                     Note: Must have an admin account in{" "}
+                     <a href='#'>dhaushop.herokuapp.com</a>
                   </label>
                </form>
             </div>
          </div>
       </>
-   );
-};
+   )
+}
 
-export default connect(null, { login })(Login);
+export default connect(null, { login })(Login)

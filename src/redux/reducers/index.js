@@ -1,10 +1,16 @@
-import { combineReducers } from "redux";
-import auth from "./auth";
-import customers from "./customer";
-import products from "./product";
-
+import { combineReducers } from "redux"
+import auth from "./auth"
+import customers from "./customer"
+import { productReducer } from "./product"
+import {
+   orderDetailReducer,
+   myOrderDetailReducer,
+   modifyOrderStatus,
+} from "./orderReducer"
 export default combineReducers({
    auth,
    customers,
-   products,
-});
+   products: productReducer,
+   orderDetails: orderDetailReducer,
+   myOrder: myOrderDetailReducer,
+})

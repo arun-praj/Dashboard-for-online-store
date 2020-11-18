@@ -33,8 +33,15 @@ export const deleteProduct = (id) => async (dispatch) => {
    ipcRenderer.on("token-reply", async (event, arg) => {
       if (arg !== undefined) {
          try {
+            const config = {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${arg}`,
+               },
+            }
             const products = await axios.delete(
-               `${process.env.REACT_APP_PROXY}/api/products/${id}`
+               `${process.env.REACT_APP_PROXY}/api/products/${id}`,
+               config
             )
             dispatch({
                type: PRODUCT_DELETE_SUCCESS,
@@ -52,7 +59,14 @@ export const addProduct = (products, productImg) => async (dispatch) => {
    ipcRenderer.send("get-token", "Gimee")
    ipcRenderer.on("token-reply", async (event, arg) => {
       if (arg !== undefined) {
-         const { stock, description, price, name, category } = products
+         const {
+            image,
+            countInStock,
+            description,
+            price,
+            name,
+            category,
+         } = products
 
          const config = {
             headers: {
@@ -61,15 +75,15 @@ export const addProduct = (products, productImg) => async (dispatch) => {
             },
          }
          const body = {
-            stock,
+            countInStock,
             description,
             price,
             name,
             category,
-            size: [3, 4, 5],
-            photo: "",
+            // size: [3, 4, 5],
+            image,
          }
-         console.log(products, productImg)
+         // console.log(products, productImg)
          trackPromise(
             axios
                .post(
@@ -78,24 +92,25 @@ export const addProduct = (products, productImg) => async (dispatch) => {
                   config
                )
                .then((res) => {
-                  console.log("Product ID", res.data.data.value._id)
-                  const formData = new FormData()
-                  formData.append("file", productImg)
-                  axios
-                     .put(
-                        `${process.env.REACT_APP_PROXY}/api/products/${res.data.data.value._id}`,
-                        formData,
-                        {
-                           headers: {
-                              Authorization: `Bearer ${arg}`,
-                              "Content-Type": "multipart/form-data",
-                              "Access-Control-Allow-Origin": "*",
-                           },
-                        }
-                     )
-                     .then((res) => {
-                        console.log(res)
-                     })
+                  // console.log("Product ID", res.data.data.value._id)
+                  // const formData = new FormData()
+                  // formData.append("file", productImg)
+                  // axios
+                  //    .put(
+                  //       `${process.env.REACT_APP_PROXY}/api/products/${res.data.data.value._id}`,
+                  //       formData,
+                  //       {
+                  //          headers: {
+                  //             Authorization: `Bearer ${arg}`,
+                  //             "Content-Type": "multipart/form-data",
+                  //             "Access-Control-Allow-Origin": "*",
+                  //          },
+                  //       }
+                  //    )
+                  //    .then((res) => {
+                  //       console.log(res)
+                  console.log(res)
+                  //    })
                   dispatch({
                      type: PRODUCT_ADD_SUCCESS,
                      payload: res.data,

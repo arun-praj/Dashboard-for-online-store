@@ -1,286 +1,60 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import "./Dashboard.scss"
 import Body from "../../HOCs/Body"
 import Button from "../../ui/Button/Button"
 import Spinner from "../../ui/Spinner/Spinner"
-import { ResponsiveLine } from "@nivo/line"
+// import { ResponsiveLine } from "@nivo/line"
 import { Grid, Page, StatsCard } from "tabler-react"
+import { Bar, Line, Pie } from "react-chartjs-2"
+import axios from "axios"
 
 import "tabler-react/dist/Tabler.css"
+const { ipcRenderer } = window.require("electron")
 
-const data = [
-   {
-      id: "japan",
-      color: "hsl(300, 70%, 50%)",
-      data: [
-         {
-            x: "plane",
-            y: 233,
-         },
-         {
-            x: "helicopter",
-            y: 204,
-         },
-         {
-            x: "boat",
-            y: 165,
-         },
-         {
-            x: "train",
-            y: 279,
-         },
-         {
-            x: "subway",
-            y: 268,
-         },
-         {
-            x: "bus",
-            y: 148,
-         },
-         {
-            x: "car",
-            y: 227,
-         },
-         {
-            x: "moto",
-            y: 107,
-         },
-         {
-            x: "bicycle",
-            y: 7,
-         },
-         {
-            x: "horse",
-            y: 99,
-         },
-         {
-            x: "skateboard",
-            y: 40,
-         },
-         {
-            x: "others",
-            y: 19,
-         },
-      ],
-   },
-   {
-      id: "france",
-      color: "hsl(31, 70%, 50%)",
-      data: [
-         {
-            x: "plane",
-            y: 82,
-         },
-         {
-            x: "helicopter",
-            y: 189,
-         },
-         {
-            x: "boat",
-            y: 109,
-         },
-         {
-            x: "train",
-            y: 209,
-         },
-         {
-            x: "subway",
-            y: 50,
-         },
-         {
-            x: "bus",
-            y: 293,
-         },
-         {
-            x: "car",
-            y: 0,
-         },
-         {
-            x: "moto",
-            y: 133,
-         },
-         {
-            x: "bicycle",
-            y: 124,
-         },
-         {
-            x: "horse",
-            y: 270,
-         },
-         {
-            x: "skateboard",
-            y: 96,
-         },
-         {
-            x: "others",
-            y: 136,
-         },
-      ],
-   },
-   {
-      id: "us",
-      color: "hsl(151, 70%, 50%)",
-      data: [
-         {
-            x: "plane",
-            y: 124,
-         },
-         {
-            x: "helicopter",
-            y: 185,
-         },
-         {
-            x: "boat",
-            y: 94,
-         },
-         {
-            x: "train",
-            y: 61,
-         },
-         {
-            x: "subway",
-            y: 159,
-         },
-         {
-            x: "bus",
-            y: 52,
-         },
-         {
-            x: "car",
-            y: 73,
-         },
-         {
-            x: "moto",
-            y: 102,
-         },
-         {
-            x: "bicycle",
-            y: 8,
-         },
-         {
-            x: "horse",
-            y: 253,
-         },
-         {
-            x: "skateboard",
-            y: 294,
-         },
-         {
-            x: "others",
-            y: 297,
-         },
-      ],
-   },
-   {
-      id: "germany",
-      color: "hsl(4, 70%, 50%)",
-      data: [
-         {
-            x: "plane",
-            y: 192,
-         },
-         {
-            x: "helicopter",
-            y: 287,
-         },
-         {
-            x: "boat",
-            y: 163,
-         },
-         {
-            x: "train",
-            y: 261,
-         },
-         {
-            x: "subway",
-            y: 21,
-         },
-         {
-            x: "bus",
-            y: 270,
-         },
-         {
-            x: "car",
-            y: 154,
-         },
-         {
-            x: "moto",
-            y: 59,
-         },
-         {
-            x: "bicycle",
-            y: 137,
-         },
-         {
-            x: "horse",
-            y: 206,
-         },
-         {
-            x: "skateboard",
-            y: 28,
-         },
-         {
-            x: "others",
-            y: 0,
-         },
-      ],
-   },
-   {
-      id: "norway",
-      color: "hsl(155, 70%, 50%)",
-      data: [
-         {
-            x: "plane",
-            y: 84,
-         },
-         {
-            x: "helicopter",
-            y: 165,
-         },
-         {
-            x: "boat",
-            y: 153,
-         },
-         {
-            x: "train",
-            y: 27,
-         },
-         {
-            x: "subway",
-            y: 237,
-         },
-         {
-            x: "bus",
-            y: 114,
-         },
-         {
-            x: "car",
-            y: 222,
-         },
-         {
-            x: "moto",
-            y: 12,
-         },
-         {
-            x: "bicycle",
-            y: 180,
-         },
-         {
-            x: "horse",
-            y: 96,
-         },
-         {
-            x: "skateboard",
-            y: 18,
-         },
-         {
-            x: "others",
-            y: 18,
-         },
-      ],
-   },
-]
 const Dashboard = () => {
+   const [barData, setBarData] = useState({
+      labels: ["a", "b", "c"],
+      datasets: [
+         {
+            label: "name",
+            data: [12, 23, 25],
+            borderWidth: 4,
+         },
+      ],
+      // y: [1, 2, 4],
+   })
+   const [lineData, setLineData] = useState({
+      x: ["a", "b", "c"],
+      y: [1, 2, 4],
+   })
+   const [pieData, setPieData] = useState({
+      x: ["a", "b", "c"],
+      y: [1, 2, 4],
+   })
+   useEffect(() => {
+      ipcRenderer.send("get-token", "Gimee")
+      ipcRenderer.on("token-reply", async (event, arg) => {
+         if (arg !== undefined) {
+            // console.log(status)
+            let body
+            const config = {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${arg}`,
+               },
+            }
+
+            const res = await axios.put(
+               `http://localhost:9000/api/products`,
+               body,
+               config
+            )
+            // dispatch(getOrderDetails(sort))
+
+            console.log(res.data)
+         }
+      })
+   })
    return (
       <Body>
          <div className='grid__box grid__box--1'>
@@ -320,8 +94,20 @@ const Dashboard = () => {
                   </Grid.Col>
                </Grid.Row>
 
-               <div style={{ width: "400px" }}>
-                  <ResponsiveLine
+               <div style={{ width: "100%", maxHeight: "100px" }}>
+                  <Bar
+                     data={barData.dataSet}
+                     // height={100}
+                     options={{
+                        maintainAspectRatio: true,
+                        title: {
+                           display: true,
+                           text: "Products in inventory",
+                        },
+                        // maintainAspectRatio: false,
+                     }}
+                  />
+                  {/* <ResponsiveLine
                      data={data}
                      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                      xScale={{ type: "point" }}
@@ -385,7 +171,7 @@ const Dashboard = () => {
                            ],
                         },
                      ]}
-                  />
+                  /> */}
                </div>
             </Page.Content>
          </div>
